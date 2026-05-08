@@ -49,7 +49,7 @@ function AdminPage() {
   const saveFaqs = async () => {
     setSaving(true);
     try {
-      await saveFaqsFn(faqs);
+      await saveFaqsFn({ data: faqs });
       alert("FAQs saved successfully!");
     } catch (error) {
       console.error("Failed to save FAQs:", error);
@@ -62,7 +62,7 @@ function AdminPage() {
   const saveAbout = async () => {
     setSaving(true);
     try {
-      await saveAboutFn(about);
+      await saveAboutFn({ data: about });
       alert("About data saved successfully!");
     } catch (error) {
       console.error("Failed to save About data:", error);

@@ -26,7 +26,7 @@ export async function searchFaqsData(
   category: string = "All"
 ): Promise<FAQItem[]> {
   try {
-    return await searchFaqsFn({ query, category });
+    return await searchFaqsFn({ data: { query, category } });
   } catch (error) {
     console.error("Failed to search FAQs:", error);
     return [];
@@ -70,7 +70,7 @@ export async function fetchAboutSections() {
  */
 export async function saveFaqs(faqs: FAQItem[]): Promise<{ success: boolean }> {
   try {
-    return await saveFaqsFn(faqs);
+    return await saveFaqsFn({ data: faqs });
   } catch (error) {
     console.error("Failed to save FAQs:", error);
     throw error;
@@ -82,7 +82,7 @@ export async function saveFaqs(faqs: FAQItem[]): Promise<{ success: boolean }> {
  */
 export async function saveAbout(about: AboutResponse): Promise<{ success: boolean }> {
   try {
-    return await saveAboutFn(about);
+    return await saveAboutFn({ data: about });
   } catch (error) {
     console.error("Failed to save About data:", error);
     throw error;
@@ -91,7 +91,7 @@ export async function saveAbout(about: AboutResponse): Promise<{ success: boolea
 
 export async function submitContact(formData: ContactFormData): Promise<{ success: boolean }> {
   try {
-    return await submitContactFn(formData);
+    return await submitContactFn({ data: formData });
   } catch (error) {
     console.error("Failed to submit contact data:", error);
     throw error;
@@ -100,7 +100,7 @@ export async function submitContact(formData: ContactFormData): Promise<{ succes
 
 export async function submitJoinUs(formData: JoinUsFormData): Promise<{ success: boolean }> {
   try {
-    return await submitJoinUsFn(formData);
+    return await submitJoinUsFn({ data: formData });
   } catch (error) {
     console.error("Failed to submit join-us form:", error);
     throw error;
