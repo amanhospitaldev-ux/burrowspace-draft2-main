@@ -30,7 +30,7 @@ export const fetchAboutDataFn = createServerFn()
   });
 
 // Admin functions for saving data
-export const saveFaqsFn = createServerFn()
+export const saveFaqsFn = createServerFn({ method: 'POST' })
   .inputValidator((data: FAQItem[]) => data)
   .handler(async ({ data: faqs }) => {
     const success = await saveFaqs(faqs);
@@ -40,7 +40,7 @@ export const saveFaqsFn = createServerFn()
     return { success: true };
   });
 
-export const saveAboutFn = createServerFn()
+export const saveAboutFn = createServerFn({ method: 'POST' })
   .inputValidator((data: AboutResponse) => data)
   .handler(async ({ data: about }) => {
     const success = await saveAbout(about);
@@ -50,7 +50,7 @@ export const saveAboutFn = createServerFn()
     return { success: true };
   });
 
-export const submitContactFn = createServerFn()
+export const submitContactFn = createServerFn({ method: 'POST' })
   .inputValidator((data: ContactFormData) => data)
   .handler(async ({ data: contactData }) => {
     try {
@@ -70,11 +70,14 @@ export const fetchContactSubmissionsFn = createServerFn()
     return getContactSubmissions();
   });
 
-export const submitJoinUsFn = createServerFn()
+export const submitJoinUsFn = createServerFn({ method: 'POST' })
   .inputValidator((data: JoinUsFormData) => data)
   .handler(async ({ data: formData }) => {
     try {
-      await saveJoinUsSubmission(formData);
+      const success = await saveJoinUsSubmission(formData);
+      if (!success) {
+        console.warn('Join-us submission could not be saved to KV');
+      }
     } catch (error) {
       console.error('Join-us submission error:', error);
     }
