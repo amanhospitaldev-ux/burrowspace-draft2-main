@@ -13,7 +13,8 @@ export const fetchAllFaqsFn = createServerFn()
   });
 
 export const searchFaqsFn = createServerFn()
-  .handler(async (input: { query?: string; category?: string } = {}) => {
+  .inputValidator((data: { query?: string; category?: string }) => data)
+  .handler(async ({ data: input }) => {
     const { query = "", category = "All" } = input;
     return searchFaqs(query, category);
   });
@@ -30,7 +31,8 @@ export const fetchAboutDataFn = createServerFn()
 
 // Admin functions for saving data
 export const saveFaqsFn = createServerFn()
-  .handler(async (faqs: FAQItem[]) => {
+  .inputValidator((data: FAQItem[]) => data)
+  .handler(async ({ data: faqs }) => {
     const success = await saveFaqs(faqs);
     if (!success) {
       throw new Error("Failed to save FAQs");
@@ -39,7 +41,8 @@ export const saveFaqsFn = createServerFn()
   });
 
 export const saveAboutFn = createServerFn()
-  .handler(async (about: AboutResponse) => {
+  .inputValidator((data: AboutResponse) => data)
+  .handler(async ({ data: about }) => {
     const success = await saveAbout(about);
     if (!success) {
       throw new Error("Failed to save About data");
@@ -48,19 +51,16 @@ export const saveAboutFn = createServerFn()
   });
 
 export const submitContactFn = createServerFn()
-  .handler(async (contactData: ContactFormData) => {
+  .inputValidator((data: ContactFormData) => data)
+  .handler(async ({ data: contactData }) => {
     try {
       const success = await saveContactSubmission(contactData);
       if (!success) {
-        // If KV isn't available, still return success to the user
-        // Log the error server-side but don't show it to the user
         console.warn('Contact submission could not be saved to KV, but message was received');
       }
-      // Always return success so user doesn't see an error
       return { success: true };
     } catch (error) {
       console.error('Contact submission error:', error);
-      // Still return success to prevent user-facing errors
       return { success: true };
     }
   });
@@ -71,7 +71,8 @@ export const fetchContactSubmissionsFn = createServerFn()
   });
 
 export const submitJoinUsFn = createServerFn()
-  .handler(async (formData: JoinUsFormData) => {
+  .inputValidator((data: JoinUsFormData) => data)
+  .handler(async ({ data: formData }) => {
     try {
       await saveJoinUsSubmission(formData);
     } catch (error) {

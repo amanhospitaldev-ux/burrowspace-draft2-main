@@ -19,10 +19,10 @@ export const Route = createFileRoute("/contactus")({
 });
 
 const contactInfo = [
-  { icon: "✉", label: "Email us", value: "hello@burrowspace.io" },
-  { icon: "💬", label: "Discord", value: "Burrowspace" },
-  { icon: "✈", label: "Telegram", value: "@burrowspace" },
-  { icon: "𝕏", label: "Twitter / X", value: "@burrowspace" },
+  { icon: "✉", label: "Email us", value: "burrowspacellp@gmail.com" },
+  // { icon: "💬", label: "Discord", value: "Burrowspace" },
+  // { icon: "✈", label: "Telegram", value: "@burrowspace" },
+  // { icon: "𝕏", label: "Twitter / X", value: "@burrowspace" },
 ];
 
 function ContactUsPage() {

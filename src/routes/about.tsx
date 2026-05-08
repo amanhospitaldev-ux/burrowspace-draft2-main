@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
 import type React from "react";
 import Navbar from "@/components/Navbar";
 import { useInView } from "@/hooks/use-scroll";
@@ -7,8 +6,21 @@ import aimImg from "@/assets/about-aim.jpg";
 import visionImg from "@/assets/about-vision.jpg";
 import motiveImg from "@/assets/about-motive.jpg";
 import Footer from "@/components/Footer";
+import { fetchAboutData } from "@/lib/api-utils";
+import type { AboutSection } from "@/types/api";
+
+const SECTION_IMAGES: Record<string, string> = {
+  "about-aim.jpg": aimImg,
+  "about-vision.jpg": visionImg,
+  "about-motive.jpg": motiveImg,
+};
+
+function resolveSectionImage(filename: string): string {
+  return SECTION_IMAGES[filename] ?? aimImg;
+}
 
 export const Route = createFileRoute("/about")({
+  loader: () => fetchAboutData(),
   head: () => ({
     meta: [
       { title: "About Us — BurrowSpace" },
@@ -126,7 +138,25 @@ function FounderQuoteCard({ quote, name, role, delay = "", reverse = false }: { 
   );
 }
 
+function renderSectionBody(section: AboutSection) {
+  const paras = section.content.trim().split(/\n\n+/).filter(Boolean);
+  return (
+    <>
+      {paras.map((para, i) => (
+        <p key={i} className={i > 0 ? "mt-4" : undefined}>
+          {para}
+        </p>
+      ))}
+      {section.highlight ? (
+        <p className="mt-4 font-semibold text-brand">{section.highlight}</p>
+      ) : null}
+    </>
+  );
+}
+
 function AboutPage() {
+  const about = Route.useLoaderData();
+
   return (
     <>
       <Navbar />
@@ -144,54 +174,22 @@ function AboutPage() {
           </RevealSection>
         </section>
 
-        {/* AIM */}
-        <section className="px-6 sm:px-8 py-12 sm:py-16 lg:px-16">
-          <div className="mx-auto max-w-6xl">
-            <ImageSection image={aimImg} label="AIM" title="Privacy Is a Promise, Not a Myth">
-              <p>
-                Privacy was never a privilege — it&apos;s a fundamental right. At BurrowSpace, we exist to ensure that
-                every byte of your data remains truly yours. In a world where surveillance has become the norm, we&apos;re
-                building the tools that make privacy not just possible, but effortless.
-              </p>
-              <p className="mt-4 font-semibold text-brand">
-                Privacy is no longer a myth — it&apos;s a promise we deliver.
-              </p>
-            </ImageSection>
-          </div>
-        </section>
-
-        {/* VISION */}
-        <section className="px-6 sm:px-8 py-12 sm:py-16 lg:px-16">
-          <div className="mx-auto max-w-6xl">
-            <ImageSection image={visionImg} label="VISION" title="Sovereign Infrastructure, Built in India" reverse>
-              <p>
-                Born in India, engineered for sovereignty. BurrowSpace is building a future where your digital
-                infrastructure isn&apos;t dependent on foreign servers or overseas corporations. We believe that true
-                data independence means owning the entire stack — from encryption to infrastructure — right here
-                on Indian soil.
-              </p>
-              <p className="mt-4 font-semibold text-brand">
-                Made in India. Controlled by you. Dependent on no one.
-              </p>
-            </ImageSection>
-          </div>
-        </section>
-
-        {/* MOTIVE */}
-        <section className="px-6 sm:px-8 py-12 sm:py-16 lg:px-16">
-          <div className="mx-auto max-w-6xl">
-            <ImageSection image={motiveImg} label="MOTIVE" title="Own Your Digital Narrative">
-              <p>
-                Every click, every message, every file — they tell the story of who you are. Our motive is simple:
-                give people the power to own their digital narrative. We build encryption-first products that put
-                the user back in the driver&apos;s seat, stripping away the surveillance economy one layer at a time.
-              </p>
-            </ImageSection>
-          </div>
-        </section>
-
-        {/* Founder's Quotes */}
-        <section className="px-6 sm:px-8 py-16 sm:py-20 lg:px-16">
+        {about.sections.map((section) => (
+          <section key={section.id} className="px-6 sm:px-8 py-12 sm:py-16 lg:px-16">
+            <div className="mx-auto max-w-6xl">
+              <ImageSection
+                image={resolveSectionImage(section.image)}
+                label={section.label}
+                title={section.title}
+                reverse={section.reverse}
+              >
+                {renderSectionBody(section)}
+              </ImageSection>
+            </div>
+          </section>
+        ))}
+        {/* Founder's Quotes — hidden until content is ready */}
+        {/* <section className="px-6 sm:px-8 py-16 sm:py-20 lg:px-16">
           <div className="mx-auto max-w-6xl">
             <RevealSection>
               <p className="mb-8 sm:mb-10 text-center text-xs font-semibold tracking-[0.4em] text-brand">FOUNDERS&apos; QUOTES</p>
@@ -212,7 +210,7 @@ function AboutPage() {
               />
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Impact sections */}
         <section className="px-6 sm:px-8 py-12 sm:py-16 lg:px-16">

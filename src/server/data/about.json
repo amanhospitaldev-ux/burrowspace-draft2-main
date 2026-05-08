@@ -3,8 +3,8 @@
     {
       "id": "aim",
       "label": "AIM",
-      "title": "Privacy Is a Promise, Not a Myth",
-      "content": "Privacy was never a privilege — it's a fundamental right. At BurrowSpace, we exist to ensure that every byte of your data remains truly yours. In a world where surveillance has become the norm, we're building the tools that make privacy not just possible, but effortless.",
+      "title": "Redefining privacy as a digital right, not a disappearing privilege.",
+      "content": "At BurrowSpace, we aim to challenge the belief that privacy is fading in the digital age. We are building a future where data remains secure, seamless, and entirely under the user’s control. Our mission is to transform security from a privilege into a fundamental digital right.",
       "highlight": "Privacy is no longer a myth — it's a promise we deliver.",
       "image": "about-aim.jpg",
       "reverse": false
@@ -12,8 +12,8 @@
     {
       "id": "vision",
       "label": "VISION",
-      "title": "Sovereign Infrastructure, Built in India",
-      "content": "Born in India, engineered for sovereignty. BurrowSpace is building a future where your digital infrastructure isn't dependent on foreign servers or overseas corporations. We believe that true data independence means owning the entire stack — from encryption to infrastructure — right here on Indian soil.",
+      "title": "Building a future where technology protects people, not profits from them.",
+      "content": "The future belongs to systems that empower individuals with ownership, security, and freedom — where technology protects people, not profits from them.",
       "highlight": "Made in India. Controlled by you. Dependent on no one.",
       "image": "about-vision.jpg",
       "reverse": true
@@ -21,8 +21,8 @@
     {
       "id": "motive",
       "label": "MOTIVE",
-      "title": "Own Your Digital Narrative",
-      "content": "Every click, every message, every file — they tell the story of who you are. Our motive is simple: give people the power to own their digital narrative. We build encryption-first products that put the user back in the driver's seat, stripping away the surveillance economy one layer at a time.",
+      "title": "Returning ownership of data to the people who create it.",
+      "content": "BurrowSpace exists to return ownership of data to the people who create it. By enabling users to securely store information across personal devices and decentralized networks, we eliminate unnecessary dependence on traditional cloud providers. We believe privacy should not be rented through subscriptions — it should be permanently owned, protected, and accessible without compromise.",
       "highlight": null,
       "image": "about-motive.jpg",
       "reverse": false
