@@ -49,6 +49,19 @@ export interface ContactSubmission extends ContactFormData {
   submittedAt: string;
 }
 
+export interface JoinUsFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  topic: string;
+  yourThoughts: string;
+  whyJoinUs: string;
+}
+
+export interface JoinUsSubmission extends JoinUsFormData {
+  submittedAt: string;
+}
+
 // Generic API Response Type
 export interface ApiResponse<T> {
   success: boolean;

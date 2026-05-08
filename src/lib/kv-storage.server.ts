@@ -3,59 +3,21 @@
  * This replaces the static JSON files with persistent KV storage
  */
 
-import type { FAQItem, AboutResponse, ContactFormData, ContactSubmission } from "@/types/api";
+import type { FAQItem, AboutResponse, ContactFormData, ContactSubmission, JoinUsFormData, JoinUsSubmission } from "@/types/api";
+import { env } from "cloudflare:workers";
 
-declare global {
-  interface KVNamespace {
-    get(key: string): Promise<string | null>;
-    put(key: string, value: string): Promise<void>;
-  }
-}
-
-// Cloudflare Worker bindings - injected at runtime
-declare const FAQS_KV: KVNamespace | undefined;
-declare const ABOUT_KV: KVNamespace | undefined;
-
-let faqsKVCache: KVNamespace | undefined;
-let aboutKVCache: KVNamespace | undefined;
-
-// Initialize KV on first access - Cloudflare injects bindings into global scope
-const initializeKV = () => {
-  if (!faqsKVCache) {
-    try {
-      faqsKVCache = (globalThis as any).FAQS_KV;
-      if (!faqsKVCache) {
-        console.warn('FAQS_KV binding not found in globalThis');
-      }
-    } catch (e) {
-      console.error('Error initializing FAQS_KV:', e);
-    }
-  }
-  
-  if (!aboutKVCache) {
-    try {
-      aboutKVCache = (globalThis as any).ABOUT_KV;
-      if (!aboutKVCache) {
-        console.warn('ABOUT_KV binding not found in globalThis');
-      }
-    } catch (e) {
-      console.error('Error initializing ABOUT_KV:', e);
-    }
-  }
+type KVNamespaceSubset = {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
 };
 
-const getFaqsNamespace = (): KVNamespace | undefined => {
-  initializeKV();
-  return faqsKVCache;
-};
+const getFaqsNamespace = (): KVNamespaceSubset | undefined => env.FAQS_KV;
 
-const getAboutNamespace = (): KVNamespace | undefined => {
-  initializeKV();
-  return aboutKVCache;
-};
+const getAboutNamespace = (): KVNamespaceSubset | undefined => env.ABOUT_KV;
 
-const getContactNamespace = (): KVNamespace | undefined => getAboutNamespace();
+const getContactNamespace = (): KVNamespaceSubset | undefined => getAboutNamespace();
 const CONTACT_MESSAGES_KEY = "contact_messages";
+const JOIN_US_SUBMISSIONS_KEY = "join_us_submissions";
 
 // Default data (fallback if KV is empty)
 const DEFAULT_FAQS: FAQItem[] = [
@@ -210,26 +172,42 @@ export async function getContactSubmissions(): Promise<ContactSubmission[]> {
 export async function saveContactSubmission(formData: ContactFormData): Promise<boolean> {
   try {
     const kv = getContactNamespace();
-    if (!kv) {
-      console.error('Contact KV namespace is NOT available in this environment', {
-        hasFAQS_KV: !!(globalThis as any).FAQS_KV,
-        hasABOUT_KV: !!(globalThis as any).ABOUT_KV,
-        availableGlobals: Object.keys(globalThis).filter(k => k.toUpperCase().includes('KV')).slice(0, 10)
-      });
-      return false;
-    }
-    
-    console.log('Contact KV namespace found, proceeding with save');
+    if (!kv) return false;
     const existing = await getContactSubmissions();
-    const submission: ContactSubmission = {
-      ...formData,
-      submittedAt: new Date().toISOString(),
-    };
+    const submission: ContactSubmission = { ...formData, submittedAt: new Date().toISOString() };
     await kv.put(CONTACT_MESSAGES_KEY, JSON.stringify([...existing, submission]));
-    console.log('Contact submission saved successfully');
     return true;
   } catch (error) {
-    console.error('Failed to save contact submission to KV:', error);
+    console.error('Failed to save contact submission:', error);
+  }
+  return false;
+}
+
+export async function getJoinUsSubmissions(): Promise<JoinUsSubmission[]> {
+  try {
+    const kv = getContactNamespace();
+    if (kv) {
+      const data = await kv.get(JOIN_US_SUBMISSIONS_KEY);
+      if (data) return JSON.parse(data);
+      await kv.put(JOIN_US_SUBMISSIONS_KEY, JSON.stringify([]));
+      return [];
+    }
+  } catch (error) {
+    console.error('Failed to load join-us submissions:', error);
+  }
+  return [];
+}
+
+export async function saveJoinUsSubmission(formData: JoinUsFormData): Promise<boolean> {
+  try {
+    const kv = getContactNamespace();
+    if (!kv) return false;
+    const existing = await getJoinUsSubmissions();
+    const submission: JoinUsSubmission = { ...formData, submittedAt: new Date().toISOString() };
+    await kv.put(JOIN_US_SUBMISSIONS_KEY, JSON.stringify([...existing, submission]));
+    return true;
+  } catch (error) {
+    console.error('Failed to save join-us submission:', error);
   }
   return false;
 }

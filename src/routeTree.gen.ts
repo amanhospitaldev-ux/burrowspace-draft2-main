@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as FaqsRouteImport } from './routes/faqs'
+import { Route as CybersecCommunityRouteImport } from './routes/cybersec-community'
 import { Route as ContactusRouteImport } from './routes/contactus'
 import { Route as ApiTestRouteImport } from './routes/api-test'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const FaqsRoute = FaqsRouteImport.update({
   id: '/faqs',
   path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CybersecCommunityRoute = CybersecCommunityRouteImport.update({
+  id: '/cybersec-community',
+  path: '/cybersec-community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactusRoute = ContactusRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/api-test': typeof ApiTestRoute
   '/contactus': typeof ContactusRoute
+  '/cybersec-community': typeof CybersecCommunityRoute
   '/faqs': typeof FaqsRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/api-test': typeof ApiTestRoute
   '/contactus': typeof ContactusRoute
+  '/cybersec-community': typeof CybersecCommunityRoute
   '/faqs': typeof FaqsRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/api-test': typeof ApiTestRoute
   '/contactus': typeof ContactusRoute
+  '/cybersec-community': typeof CybersecCommunityRoute
   '/faqs': typeof FaqsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/admin' | '/api-test' | '/contactus' | '/faqs'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/api-test'
+    | '/contactus'
+    | '/cybersec-community'
+    | '/faqs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/admin' | '/api-test' | '/contactus' | '/faqs'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/api-test'
+    | '/contactus'
+    | '/cybersec-community'
+    | '/faqs'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api-test'
     | '/contactus'
+    | '/cybersec-community'
     | '/faqs'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +117,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ApiTestRoute: typeof ApiTestRoute
   ContactusRoute: typeof ContactusRoute
+  CybersecCommunityRoute: typeof CybersecCommunityRoute
   FaqsRoute: typeof FaqsRoute
 }
 
@@ -103,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/faqs'
       fullPath: '/faqs'
       preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cybersec-community': {
+      id: '/cybersec-community'
+      path: '/cybersec-community'
+      fullPath: '/cybersec-community'
+      preLoaderRoute: typeof CybersecCommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contactus': {
@@ -149,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ApiTestRoute: ApiTestRoute,
   ContactusRoute: ContactusRoute,
+  CybersecCommunityRoute: CybersecCommunityRoute,
   FaqsRoute: FaqsRoute,
 }
 export const routeTree = rootRouteImport

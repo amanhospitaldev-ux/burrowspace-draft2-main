@@ -6,18 +6,20 @@ import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo-full.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
+import JoinUsModal from "@/components/JoinUsModal";
 
 const navLinks = [
   { label: "ABOUT US", to: "/about" },
   //{ label: "Career", href: "#" },
   { label: "CONTACT US", to: "/contactus" },
   { label: "FAQS", to: "/faqs" },
-  { label: "CYBERSEC COMMUNITY", to: "#" },
+  { label: "CYBERSEC COMMUNITY", to: "/cybersec-community" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [joinUsOpen, setJoinUsOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -58,7 +60,10 @@ export default function Navbar() {
         )}
       </div>
 
-      <button className="hidden rounded-none border border-white px-7 py-3 text-xs font-semibold tracking-[0.15em] text-white transition-colors hover:bg-white hover:text-[oklch(0.08_0.02_260)] md:inline-flex">
+      <button
+        onClick={() => setJoinUsOpen(true)}
+        className="hidden rounded-none border border-white px-7 py-3 text-xs font-semibold tracking-[0.15em] text-white transition-colors hover:bg-white hover:text-[oklch(0.08_0.02_260)] md:inline-flex"
+      >
         JOIN US
       </button>
 
@@ -95,13 +100,18 @@ export default function Navbar() {
                   </span>
                 )
               )}
-              <button className="mt-4 rounded-none border border-white px-6 py-2 text-xs font-semibold tracking-[0.15em] text-white transition-colors hover:bg-white hover:text-[oklch(0.08_0.02_260)] w-full">
+              <button
+                onClick={() => { setIsOpen(false); setJoinUsOpen(true); }}
+                className="mt-4 rounded-none border border-white px-6 py-2 text-xs font-semibold tracking-[0.15em] text-white transition-colors hover:bg-white hover:text-[oklch(0.08_0.02_260)] w-full"
+              >
                 JOIN US
               </button>
             </div>
           </SheetContent>
         </Sheet>
       )}
+
+      <JoinUsModal open={joinUsOpen} onOpenChange={setJoinUsOpen} />
     </nav>
   );
 }

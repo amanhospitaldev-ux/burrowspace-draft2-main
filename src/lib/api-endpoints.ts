@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getAllFaqs, searchFaqs, getFaqCategories, getAbout, saveFaqs, saveAbout, getContactSubmissions, saveContactSubmission } from "@/lib/api-utils.server";
-import type { FAQItem, AboutResponse, ContactFormData } from "@/types/api";
+import { getAllFaqs, searchFaqs, getFaqCategories, getAbout, saveFaqs, saveAbout, getContactSubmissions, saveContactSubmission, getJoinUsSubmissions, saveJoinUsSubmission } from "@/lib/api-utils.server";
+import type { FAQItem, AboutResponse, ContactFormData, JoinUsFormData } from "@/types/api";
 
 /**
  * Server functions for API endpoints
@@ -68,4 +68,19 @@ export const submitContactFn = createServerFn()
 export const fetchContactSubmissionsFn = createServerFn()
   .handler(async () => {
     return getContactSubmissions();
+  });
+
+export const submitJoinUsFn = createServerFn()
+  .handler(async (formData: JoinUsFormData) => {
+    try {
+      await saveJoinUsSubmission(formData);
+    } catch (error) {
+      console.error('Join-us submission error:', error);
+    }
+    return { success: true };
+  });
+
+export const fetchJoinUsSubmissionsFn = createServerFn()
+  .handler(async () => {
+    return getJoinUsSubmissions();
   });

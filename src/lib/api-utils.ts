@@ -3,8 +3,8 @@
  * Uses TanStack Start server functions for safe server communication
  */
 
-import type { FAQItem, AboutResponse, ContactFormData } from "@/types/api";
-import { fetchAllFaqsFn, searchFaqsFn, getFaqCategoriesFn, fetchAboutDataFn, saveFaqsFn, saveAboutFn, submitContactFn } from "./api-endpoints";
+import type { FAQItem, AboutResponse, ContactFormData, JoinUsFormData } from "@/types/api";
+import { fetchAllFaqsFn, searchFaqsFn, getFaqCategoriesFn, fetchAboutDataFn, saveFaqsFn, saveAboutFn, submitContactFn, submitJoinUsFn } from "./api-endpoints";
 
 /**
  * Get all FAQs
@@ -94,6 +94,15 @@ export async function submitContact(formData: ContactFormData): Promise<{ succes
     return await submitContactFn(formData);
   } catch (error) {
     console.error("Failed to submit contact data:", error);
+    throw error;
+  }
+}
+
+export async function submitJoinUs(formData: JoinUsFormData): Promise<{ success: boolean }> {
+  try {
+    return await submitJoinUsFn(formData);
+  } catch (error) {
+    console.error("Failed to submit join-us form:", error);
     throw error;
   }
 }
